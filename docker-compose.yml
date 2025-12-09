@@ -32,8 +32,8 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-ecg_pass}
       DATABASE_NAME: ${DATABASE_NAME:-ecg_db}
     depends_on:
-        postgres:
-          condition: service_healthy
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:
