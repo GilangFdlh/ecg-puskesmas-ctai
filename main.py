@@ -49,7 +49,7 @@ MQTT_PASSWORD = os.getenv("MQTT_PASSWORD", "")
 MQTT_USE_TLS = os.getenv("MQTT_USE_TLS", "False").lower() == "true"
 
 MODEL_PATH = os.getenv("MODEL_PATH")
-FLASK_PORT = int(os.getenv("FLASK_PORT"))
+FLASK_PORT = int(os.getenv("FLASK_PORT", "5000"))
 
 SPS = 100
 BUFFER_SIZE = 1000
@@ -436,6 +436,10 @@ async def purge_temporary_data(device_id: str):
             item for item in perf_data_batch 
             if item['device_id'] != device_id
         ]
+
+        global ui_data_buffer
+        if device_id in ui_data_buffer:
+            del ui_data_buffer[device_id]
         
     if removed_count > 0:
         print(f"[PURGE] Wiped {removed_count} buffered items from RAM to prevent leak.")
@@ -507,6 +511,9 @@ async def device_monitor():
                         "status": "Offline" 
                     })
                     del websocket_connections[device_id]
+
+                if device_id in ui_data_buffer:
+                    del ui_data_buffer[device_id]
 
             # Update the dropdown list for all users
             await broadcast_device_list()
