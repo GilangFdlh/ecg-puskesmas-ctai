@@ -21,7 +21,7 @@ services:
   backend:
 
     build: .
-    container_name: ekg_backend
+    container_name: ecg_backend
     restart: always
     ports:
     - "5000:5000"
