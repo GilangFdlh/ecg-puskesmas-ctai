@@ -49,7 +49,7 @@ MQTT_PASSWORD = os.getenv("MQTT_PASSWORD", "")
 MQTT_USE_TLS = os.getenv("MQTT_USE_TLS", "False").lower() == "true"
 
 MODEL_PATH = os.getenv("MODEL_PATH")
-FLASK_PORT = int(os.getenv("FLASK_PORT", "5000"))
+FLASK_PORT = int(os.getenv("FLASK_PORT"))
 
 SPS = 100
 BUFFER_SIZE = 1000
@@ -440,7 +440,7 @@ async def purge_temporary_data(device_id: str):
         global ui_data_buffer
         if device_id in ui_data_buffer:
             del ui_data_buffer[device_id]
-        
+    
     if removed_count > 0:
         print(f"[PURGE] Wiped {removed_count} buffered items from RAM to prevent leak.")
 
@@ -511,7 +511,7 @@ async def device_monitor():
                         "status": "Offline" 
                     })
                     del websocket_connections[device_id]
-
+                
                 if device_id in ui_data_buffer:
                     del ui_data_buffer[device_id]
 
@@ -1405,7 +1405,7 @@ async def lifespan(app_instance: FastAPI):
     db_task = asyncio.create_task(db_batch_inserter())
     monitor_task = asyncio.create_task(device_monitor())
     
-    print(f"[SERVER] URL: http://127.0.0.1:{FLASK_PORT}")
+    print(f"[SERVER] URL: http://localhost:{FLASK_PORT}")
     print(f"[MQTT] Broker: {MQTT_BROKER}:{MQTT_PORT}")
     
     yield
